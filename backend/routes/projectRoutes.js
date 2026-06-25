@@ -2,10 +2,16 @@ const express = require("express");
 
 const router = express.Router();
 
-router.get("/", (req, res) => {
-  res.json({
-    message: "Projects Route Working"
-  });
-});
+const {
+  createProject,
+  getProjects,
+  deleteProject,
+} = require("../controllers/projectController");
+
+router.post("/", createProject);
+
+router.get("/", getProjects);
+
+router.delete("/:id", deleteProject);
 
 module.exports = router;
