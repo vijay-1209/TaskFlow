@@ -1,27 +1,52 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Sidebar from "../components/Sidebar";
+
+import {
+  getProjects,
+  createProject,
+  deleteProject,
+} from "../services/projectService";
 
 const Projects = () => {
   const [projects, setProjects] = useState([]);
   const [title, setTitle] = useState("");
 
-  const addProject = async () => {
-  try {
-    await createProject({
-      title,
-      description: "",
-    });
-
+  useEffect(() => {
     fetchProjects();
+  }, []);
 
-    setTitle("");
-  } catch (error) {
-    console.log(error);
-  }
-};
+  const fetchProjects = async () => {
+    try {
+      const data = await getProjects();
+      setProjects(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-  const deleteProject = (id) => {
-    setProjects(projects.filter((p) => p.id !== id));
+  const addProject = async () => {
+    if (!title.trim()) return;
+
+    try {
+      await createProject({
+        title,
+        description: "",
+      });
+
+      setTitle("");
+      fetchProjects();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const removeProject = async (id) => {
+    try {
+      await deleteProject(id);
+      fetchProjects();
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -55,15 +80,21 @@ const Projects = () => {
         <div className="grid md:grid-cols-2 gap-4">
           {projects.map((project) => (
             <div
-              key={project.id}
+              key={project._id}
               className="bg-white p-5 rounded-xl shadow"
             >
               <h2 className="font-bold text-xl">
                 {project.title}
               </h2>
 
+              <p className="text-gray-500 mt-2">
+                {project.description}
+              </p>
+
               <button
-                onClick={() => deleteProject(project.id)}
+                onClick={() =>
+                  removeProject(project._id)
+                }
                 className="mt-3 bg-red-500 text-white px-3 py-2 rounded"
               >
                 Delete
