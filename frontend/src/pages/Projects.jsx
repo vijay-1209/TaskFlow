@@ -5,17 +5,20 @@ const Projects = () => {
   const [projects, setProjects] = useState([]);
   const [title, setTitle] = useState("");
 
-  const addProject = () => {
-    if (!title.trim()) return;
-
-    const newProject = {
-      id: Date.now(),
+  const addProject = async () => {
+  try {
+    await createProject({
       title,
-    };
+      description: "",
+    });
 
-    setProjects([...projects, newProject]);
+    fetchProjects();
+
     setTitle("");
-  };
+  } catch (error) {
+    console.log(error);
+  }
+};
 
   const deleteProject = (id) => {
     setProjects(projects.filter((p) => p.id !== id));
