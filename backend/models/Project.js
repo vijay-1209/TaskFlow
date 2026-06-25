@@ -4,8 +4,7 @@ const projectSchema = new mongoose.Schema(
   {
     title: {
       type: String,
-      required: [true, "Project title is required"],
-      trim: true,
+      required: true,
     },
 
     description: {
@@ -15,14 +14,13 @@ const projectSchema = new mongoose.Schema(
 
     status: {
       type: String,
-      enum: ["Planning", "In Progress", "Completed"],
-      default: "Planning",
+      enum: ["Pending", "In Progress", "Completed"],
+      default: "Pending",
     },
 
-    owner: {
+    createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true,
     },
   },
   {
@@ -30,4 +28,7 @@ const projectSchema = new mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model("Project", projectSchema);
+module.exports = mongoose.model(
+  "Project",
+  projectSchema
+);
